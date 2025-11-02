@@ -31,6 +31,11 @@ const Product = ({ name, title, basePrice, colors, sizes }) => {
     return styles[`color${normalized}`];
   };
 
+  const getPrice = () => {
+    const activeSize = sizes.find(size => size.name === currentSize);
+    return basePrice + (activeSize?.additionalPrice ?? 0);
+  };
+
   return (
     <article
       className={styles.product}
@@ -46,7 +51,7 @@ const Product = ({ name, title, basePrice, colors, sizes }) => {
       <div>
         <header>
           <h2 className={styles.name}>{title}</h2>
-          <span className={styles.price}>Price: {basePrice}$</span>
+          <span className={styles.price}>Price: {getPrice()}$</span>
         </header>
         <form>
           <div className={styles.sizes}>
