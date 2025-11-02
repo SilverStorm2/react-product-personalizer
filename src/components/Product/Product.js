@@ -24,6 +24,13 @@ const Product = ({ name, title, basePrice, colors, sizes }) => {
     return `${process.env.PUBLIC_URL}/images/products/shirt-${name}--${currentColor}.jpg`;
   }, [name, currentColor]);
 
+  const prepareColorClassName = color => {
+    if (!color) return '';
+
+    const normalized = `${color[0]?.toUpperCase() ?? ''}${color.slice(1).toLowerCase()}`;
+    return styles[`color${normalized}`];
+  };
+
   return (
     <article
       className={styles.product}
@@ -45,18 +52,34 @@ const Product = ({ name, title, basePrice, colors, sizes }) => {
           <div className={styles.sizes}>
             <h3 className={styles.optionLabel}>Sizes</h3>
             <ul className={styles.choices}>
-              <li><button type="button" className={styles.active}>S</button></li>
-              <li><button type="button">M</button></li>
-              <li><button type="button">L</button></li>
-              <li><button type="button">XL</button></li>
+              {sizes.map(size => (
+                <li key={size.name}>
+                  <button
+                    type="button"
+                    className={clsx(currentSize === size.name && styles.active)}
+                    onClick={() => setCurrentSize(size.name)}
+                  >
+                    {size.name}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
           <div className={styles.colors}>
             <h3 className={styles.optionLabel}>Colors</h3>
             <ul className={styles.choices}>
-              <li><button type="button" className={clsx(styles.colorBlack, styles.active)} /></li>
-              <li><button type="button" className={clsx(styles.colorRed)} /></li>
-              <li><button type="button" className={clsx(styles.colorWhite)} /></li>
+              {colors.map(color => (
+                <li key={color}>
+                  <button
+                    type="button"
+                    className={clsx(
+                      prepareColorClassName(color),
+                      currentColor === color && styles.active
+                    )}
+                    onClick={() => setCurrentColor(color)}
+                  />
+                </li>
+              ))}
             </ul>
           </div>
           <Button className={styles.button}>
